@@ -1,1 +1,1 @@
-module github.com/emersion/go-dkim
+module github.com/an-death/go-dkim
