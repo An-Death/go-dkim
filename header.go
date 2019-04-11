@@ -7,6 +7,7 @@ import (
 	"net/textproto"
 	"sort"
 	"strings"
+	"unicode"
 )
 
 const crlf = "\r\n"
@@ -67,7 +68,7 @@ func parseHeaderParams(s string) (map[string]string, error) {
 			return params, errors.New("dkim: malformed header params")
 		}
 
-		params[strings.TrimSpace(kv[0])] = strings.TrimSpace(kv[1])
+		params[DropSpaces(kv[0])] = DropSpaces(kv[1])
 	}
 	return params, nil
 }
@@ -134,4 +135,15 @@ func (p *headerPicker) Pick(key string) string {
 	}
 
 	return ""
+}
+
+func DropSpaces(in string) string {
+	var out []rune
+	for _, b := range []rune(in) {
+		if unicode.IsSpace(b) {
+			continue
+		}
+		out = append(out, b)
+	}
+	return string(out)
 }
